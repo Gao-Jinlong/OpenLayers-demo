@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "ol": "^7.4.0",
+    "qrcode": "^1.5.3",
     "vue": "^3.3.4"
   },
   "devDependencies": {
