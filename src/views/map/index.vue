@@ -5,14 +5,16 @@
     tab-position="left"
     size="large"
   >
-    <TabPane v-for="(map, index) in mapSet" :tab="index" :key="index"
-      >{{ index }}
-      <div class="map" :id="index"></div>
+    <TabPane v-for="(map, index) in mapSet" :tab="index" :key="index">
+      <template #default>
+        {{ index }}
+        <div class="map" :id="index"></div>
+      </template>
     </TabPane>
   </Tabs>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue"
+import { nextTick, onMounted, ref, watch } from "vue"
 import { Tabs, TabPane } from "ant-design-vue"
 
 import { initMap } from "./mode/map"
@@ -23,12 +25,14 @@ const mapSet: Record<string, (domId: string) => void> = {
   second: initMap,
 }
 
-onMounted(() => {
-  activeKey.value = "init"
+watch(activeKey, (val) => {
+  nextTick(() => {
+    mapSet[val]?.(val)
+  })
 })
 
-watch(activeKey, (val) => {
-  mapSet[val]?.(val)
+onMounted(() => {
+  activeKey.value = "init"
 })
 </script>
 <style lang="scss">

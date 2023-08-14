@@ -27,27 +27,33 @@ import "ol/ol.css"
 //     })
 //   )
 // }
+const mapCache = new Map<string, OlMap>()
 
 export function initMap(domId: string) {
-  new OlMap({
-    target: domId,
-    view: new View({
-      projection: "EPSG:3857",
-      center: [0, 0],
-      zoom: 2,
-    }),
-    layers: [
-      new TileLayer({
-        source: new TileWMS({
-          projection: "EPSG:4326", // 会重新投影到 EPSG:3857
-          url: "https://ahocevar.com/geoserver/wms",
-          params: {
-            LAYERS: "ne:NE1_HR_LC_SR_W_DR",
-          },
-        }),
+  if (mapCache.has(domId)) {
+    return mapCache.get(domId)
+  } else {
+    const map = new OlMap({
+      target: domId,
+      view: new View({
+        projection: "EPSG:3857",
+        center: [0, 0],
+        zoom: 2,
       }),
-    ],
-  })
+      layers: [
+        new TileLayer({
+          source: new TileWMS({
+            projection: "EPSG:4326", // 会重新投影到 EPSG:3857
+            url: "https://ahocevar.com/geoserver/wms",
+            params: {
+              LAYERS: "ne:NE1_HR_LC_SR_W_DR",
+            },
+          }),
+        }),
+      ],
+    })
+    mapCache.set(domId, map)
+  }
 
   // new OlMap({
   //   layers: layers,
