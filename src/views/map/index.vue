@@ -16,13 +16,14 @@
 import { nextTick, onMounted, ref, watch } from "vue"
 import { Tabs, TabPane } from "ant-design-vue"
 
-import { initMap } from "./mode/map"
+import { initMap } from "./mode/initMap"
+import { animationMap } from "./mode/customAnimation"
 
 const activeKey = ref("")
 const mapCache = new Map<string, ReturnType<typeof initMap>>()
 const mapSet: Record<string, (domId: string) => void> = {
   init: initMap,
-  second: initMap,
+  animationMap: animationMap,
 }
 
 watch(activeKey, (val) => {
