@@ -7,7 +7,6 @@
   >
     <TabPane v-for="(map, index) in mapSet" :tab="index" :key="index">
       <template #default>
-        {{ index }}
         <div class="map" :id="index"></div>
       </template>
     </TabPane>
@@ -20,6 +19,7 @@ import { Tabs, TabPane } from "ant-design-vue"
 import { initMap } from "./mode/map"
 
 const activeKey = ref("")
+const mapCache = new Map<string, ReturnType<typeof initMap>>()
 const mapSet: Record<string, (domId: string) => void> = {
   init: initMap,
   second: initMap,
@@ -27,7 +27,10 @@ const mapSet: Record<string, (domId: string) => void> = {
 
 watch(activeKey, (val) => {
   nextTick(() => {
-    mapSet[val]?.(val)
+    if (mapCache.has(val)) {
+      return
+    }
+    mapCache.set(val, mapSet[val](val)!)
   })
 })
 
