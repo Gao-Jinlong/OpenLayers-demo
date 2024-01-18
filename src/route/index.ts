@@ -1,16 +1,37 @@
 import { RouteRecordRaw } from "vue-router"
 import { createRouter, createWebHistory } from "vue-router"
 
+declare module "vue-router" {
+  interface RouteMeta {
+    title: string
+  }
+}
+
 const routes: RouteRecordRaw[] = [
   {
     name: "Home",
     path: "/",
-    component: () => import("@/views/home/index.vue"),
+    meta: {
+      title: "首页",
+    },
+    component: () => import("@/views/home/Home.vue"),
   },
   {
-    name: "Map",
-    path: "/map",
-    component: () => import("@/views/map/index.vue"),
+    name: "Example",
+    path: "/example",
+    meta: {
+      title: "Example",
+    },
+    children: [
+      {
+        name: "BoxSelection",
+        path: "/box-selection",
+        meta: {
+          title: "BoxSelection",
+        },
+        component: () => import("@/views/box-selection/BoxSelection.vue"),
+      },
+    ],
   },
 ]
 
@@ -18,6 +39,9 @@ const routes: RouteRecordRaw[] = [
 routes.push({
   path: "/:pathMatch(.*)*",
   name: "NotFound",
+  meta: {
+    title: "404",
+  },
   component: () => import("@/views/404.vue"),
 })
 
