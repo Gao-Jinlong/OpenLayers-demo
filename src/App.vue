@@ -20,7 +20,7 @@
       <template v-for="route of routes.slice(0, -1)" :key="route.path">
         <template v-if="route.children">
           <!-- TODO: 路由 -->
-          <!-- <ElSubmenu :index="String(route.name)">
+          <ElSubMenu :index="String(route.name)">
             <template #title>
               {{ route.meta?.title }}
               <i class="el-icon-arrow-down el-icon--right"></i>
@@ -30,7 +30,7 @@
                 >{{ child.meta?.title }}
               </ElMenuItem>
             </template>
-          </ElSubmenu> -->
+          </ElSubMenu>
         </template>
         <template v-else>
           <ElMenuItem :route="route" :index="String(route.name)"
