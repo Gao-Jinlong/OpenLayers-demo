@@ -31,6 +31,14 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import("@/views/box-selection/BoxSelection.vue"),
       },
+      {
+        name: "CustomAnimation",
+        path: "/custom-animation",
+        meta: {
+          title: "CustomAnimation",
+        },
+        component: () => import("@/views/custom-animation/CustomAnimation.vue"),
+      },
     ],
   },
 ]
