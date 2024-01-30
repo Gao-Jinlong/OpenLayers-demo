@@ -39,6 +39,15 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import("@/views/custom-animation/CustomAnimation.vue"),
       },
+      {
+        name: "CustomInteractions",
+        path: "/custom-interactions",
+        meta: {
+          title: "CustomInteractions",
+        },
+        component: () =>
+          import("@/views/custom-interactions/CustomInteractions.vue"),
+      },
     ],
   },
 ]

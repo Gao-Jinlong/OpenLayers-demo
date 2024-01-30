@@ -41,9 +41,11 @@
     </ElMenu>
 
     <ElConfigProvider :locale="zhCn">
-      <KeepAlive>
-        <RouterView></RouterView>
-      </KeepAlive>
+      <RouterView v-slot="{ Component }">
+        <KeepAlive>
+          <component :is="Component" />
+        </KeepAlive>
+      </RouterView>
     </ElConfigProvider>
   </div>
 </template>
