@@ -5,14 +5,15 @@
 </template>
 <script setup lang="ts">
 import MapBrowserEvent from "ol/MapBrowserEvent"
-import { LineString, Polygon } from "ol/geom"
+import { LineString, Polygon, Point } from "ol/geom"
 import { Feature, Map, View } from "ol"
 import {
   Pointer as PointerInteraction,
   defaults as defaultInteractions,
 } from "ol/interaction"
-import { Vector as VectorSource } from "ol/source"
+import { OGCMapTile, Vector as VectorSource } from "ol/source"
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js"
+import { getImageSrc } from "@/utils/getImageSrc"
 
 class Drag extends PointerInteraction {
   private coordinate_: number[] | null
@@ -70,10 +71,10 @@ function handleMoveEvent(evt: MapBrowserEvent): void {
       if (element.style.cursor !== this.cursor_) {
         this.previousCursor_ = element.style.cursor
         element.style.cursor = this.cursor_
-      } else if (this.previousCursor_ !== undefined) {
-        element.style.cursor = this.previousCursor_
-        this.previousCursor_ = undefined
       }
+    } else if (this.previousCursor_ !== undefined) {
+      element.style.cursor = this.previousCursor_
+      this.previousCursor_ = undefined
     }
   }
 }
@@ -89,12 +90,8 @@ const pointFeature = new Feature(
     [-1e6, 3e6],
   ]),
 )
-const lineFeature = new Feature(
-  new LineString([
-    [-1e7, 1e6],
-    [-1e6, 3e6],
-  ]),
-)
+const lineFeature = new Feature(new Point([0, 0]))
+
 const polygonFeature = new Feature(
   new Polygon([
     [
@@ -109,21 +106,22 @@ const polygonFeature = new Feature(
 
 onMounted(() => {
   const map = new Map({
+    target: "map-container",
     interactions: defaultInteractions().extend([new Drag()]),
     layers: [
-      // new TileLayer({
-      //   source: new OGCMapTile({
-      //     url: "https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad",
-      //     crossOrigin: "",
-      //   }),
-      // }),
+      new TileLayer({
+        source: new OGCMapTile({
+          url: "https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad",
+          crossOrigin: "",
+        }),
+      }),
       new VectorLayer({
         source: new VectorSource({
           features: [polygonFeature, pointFeature, lineFeature],
         }),
         style: {
-          "icon-src": "data/icon.png",
-          "icon-opacity": "0.95",
+          "icon-src": getImageSrc("icon.png"),
+          "icon-opacity": 0.95,
           "icon-anchor": [0.5, 46],
           "icon-anchor-x-units": "fraction",
           "icon-anchor-y-units": "pixels",
@@ -131,13 +129,12 @@ onMounted(() => {
           "stroke-color": [255, 0, 0, 1],
           "fill-color": [0, 0, 255, 0.6],
         },
-        target: "map-container",
-        view: new View({
-          center: [0, 0],
-          zoom: 2,
-        }),
       }),
     ],
+    view: new View({
+      center: [0, 0],
+      zoom: 2,
+    }),
   })
 })
 </script>
